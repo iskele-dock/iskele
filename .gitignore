@@ -1,0 +1,25 @@
+# Derleme çıktıları
+bin/
+obj/
+build/
+dist/
+publish/
+artifacts/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Kişisel / yerel dosyalar
+*.log
+settings*.json
+crash.txt
+
+# Yayın dışı: iç notlar, tanıtım çekim dosyaları, logo taslakları, yedekler
+AI_CHANGES.md
+marketing/
+docs/logo-concepts/
+*.bak

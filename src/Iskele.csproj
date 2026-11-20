@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Newer Windows API metadata for borderless capture; runtime stays .NET 9 / Windows 10+. -->
+    <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Iskele</AssemblyName>
+    <RootNamespace>Iskele</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Selected Iskele brand icon. -->
+    <ApplicationIcon>Assets\Brand\iskele.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Product>Iskele</Product>
+    <Description>Windows 10/11 için widget'lı dock</Description>
+    <Copyright>Copyright © 2026 Iskele contributors</Copyright>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Shared native branding resources. -->
+    <Resource Include="Assets\Brand\iskele.png" />
+    <PackageReference Include="System.Management" Version="9.0.0" />
+    <EmbeddedResource Include="Assets\Providers\*.svg" />
+    <None Update="Assets\Providers\NOTICE.md" CopyToOutputDirectory="PreserveNewest" TargetPath="THIRD-PARTY-ProviderIcons-NOTICE.md" />
+    <None Update="Assets\Providers\*LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Local, attributed HLSL renderer; no FX/GLSL or lab dependency. -->
+    <ProjectReference Include="..\vendor\LiquidGlass\GlassEngine.csproj" />
+  </ItemGroup>
+
+</Project>

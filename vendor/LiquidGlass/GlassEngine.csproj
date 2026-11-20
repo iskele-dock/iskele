@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<!-- [Iskele] Vendored optical renderer. Upstream authorship and GPL-3.0 are preserved. -->
+<PropertyGroup><TargetFramework>net9.0-windows10.0.22621.0</TargetFramework><SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion><UseWPF>true</UseWPF><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><AssemblyName>LiquidGlass</AssemblyName></PropertyGroup>
+<ItemGroup><Using Include="System.IO"/><PackageReference Include="Vortice.Direct3D11" Version="3.8.3"/><Resource Include="Effects/Shaders/LiquidGlass.ps"/><InternalsVisibleTo Include="Iskele"/></ItemGroup>
+<ItemGroup><None Update="LICENSE" CopyToOutputDirectory="PreserveNewest" TargetPath="THIRD-PARTY-LiquidGlass-LICENSE.txt"/><None Update="NOTICE.md" CopyToOutputDirectory="PreserveNewest" TargetPath="THIRD-PARTY-LiquidGlass-NOTICE.md"/></ItemGroup>
+</Project>
