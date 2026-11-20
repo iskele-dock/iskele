@@ -1,0 +1,31 @@
+name: Sabit indirme adı
+
+# Her yayında kurulum dosyasının "IskeleSetup.exe" adlı bir kopyasını ekler; böylece
+# https://github.com/iskele-dock/iskele/releases/latest/download/IskeleSetup.exe
+# bağlantısı sürüm değişse de hep en yeni kurulumu indirir.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Sürüm etiketi
+        required: true
+        default: v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sabit adlı kopyayı yükle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -p 'IskeleSetup-*.exe' -D dl
+          f=$(ls dl/IskeleSetup-*.exe | head -1)
+          cp "$f" dl/IskeleSetup.exe
+          gh release upload "$TAG" dl/IskeleSetup.exe --clobber -R "$GITHUB_REPOSITORY"
