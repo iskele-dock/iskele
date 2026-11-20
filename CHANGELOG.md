@@ -2,6 +2,12 @@
 
 Sürümler [Semantic Versioning](https://semver.org/lang/tr/) düzenini izler.
 
+## [1.0.1] — 2026-11-20
+
+### Yeni
+- Uygulama içi güncelleme: Iskele yeni sürümleri GitHub'dan denetler (açılıştan kısa süre sonra ve 12 saatte bir), dock menüsünde ve Ayarlar → Genel'de **Güncelle** seçeneği çıkar. Onaylayınca kurulum dosyası indirilir, SHA256 ile doğrulanır, sessizce kurulur ve Iskele yeniden açılır; ayarlar korunur.
+- Ayarlar → Genel → **Güncellemeler**: otomatik denetimi kapatma anahtarı ve "Şimdi denetle".
+
 ## [1.0.0] — 2026-11-20
 
 İlk herkese açık sürüm.
@@ -28,4 +34,5 @@ Sürümler [Semantic Versioning](https://semver.org/lang/tr/) düzenini izler.
 - Kurulum programı: kullanıcı başına kurulum (yönetici izni yok), Başlat menüsü kısayolu, sessiz kurulum (`--silent`).
 - Kaldırma: Iskele Ayarlar → Genel → **Iskele'yi kaldır** ya da Windows Ayarlar → Uygulamalar; kişisel verilerin silinmesi isteğe bağlı.
 
+[1.0.1]: ../../releases/tag/v1.0.1
 [1.0.0]: ../../releases/tag/v1.0.0

@@ -862,6 +862,7 @@ class DockWindow : Window
         var m=new ContextMenu { StaysOpen=false };
         m.Items.Add(Item("Widget’ları düzenle…",PickerWindow.Open));
         m.Items.Add(Item("Ayarlar…",SettingsWindow.Open));
+        if(Updater.Available is { } update) m.Items.Add(Item(Localization.F("Güncelle: Iskele {0}",update.Version.ToString(3)),()=>_=Updater.InstallAsync(),!Updater.Busy));
         m.Items.Add(new Separator());
         var layout=Item("Yerleşim",()=>{});
         MenuItem Choice(string text,bool selected,Action action)

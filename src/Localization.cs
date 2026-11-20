@@ -20,6 +20,23 @@ static class Localization
     public static string F(string format, params object?[] args) => string.Format(Culture, T(format), args);
     const string Translations = """
 Ayarlar|Settings
+Iskele {0} hazır|Iskele {0} is available
+Dock'a sağ tıklayıp Güncelle'yi seçin ya da Ayarlar → Genel'e gidin.|Right-click the dock and choose Update, or go to Settings → General.
+Iskele güncel ({0}).|Iskele is up to date ({0}).
+Güncelleme denetlenemedi. İnternet bağlantınızı kontrol edin ya da yeni sürümü siteden indirin.|Couldn't check for updates. Check your internet connection or download the new version from the website.
+Iskele {0} çıktı. Bu kopya kurulum programıyla kurulmadığı için otomatik güncellenemiyor. Siteyi açayım mı?|Iskele {0} is out. This copy wasn't installed with the installer, so it can't update itself. Open the website?
+Iskele {0} yüklensin mi?|Install Iskele {0}?
+Iskele birkaç saniyeliğine kapanıp yeniden açılacak; ayarlarınız korunur.|Iskele will close for a few seconds and reopen; your settings are kept.
+Iskele {0} indiriliyor…|Downloading Iskele {0}…
+İndirilen dosya doğrulanamadı (SHA256 eşleşmedi); hiçbir şey kurulmadı.|The downloaded file could not be verified (SHA256 mismatch); nothing was installed.
+Kuruluyor… Iskele birazdan yeniden açılacak.|Installing… Iskele will reopen in a moment.
+Güncelleme yapılamadı:|Update failed:
+Yeni sürümü siteden indirip kurabilirsiniz.|You can download and install the new version from the website.
+Güncellemeler|Updates
+Sürüm {0} · yeni sürümleri GitHub'dan denetler|Version {0} · checks GitHub for new versions
+Şimdi denetle|Check now
+Güncelle: {0}|Update to {0}
+Güncelle: Iskele {0}|Update to Iskele {0}
 Widget’lar|Widgets
 Tüm widget’lar|All widgets
 Widget’ları düzenle…|Edit widgets…

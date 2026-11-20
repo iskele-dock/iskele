@@ -19,7 +19,7 @@ using Microsoft.Win32;
 
 static class Setup
 {
-    const string Version = "1.0.0";
+    const string Version = "1.0.1";
     const string UninstallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\Iskele";
 
 
@@ -111,6 +111,7 @@ static class Setup
 
             if (Has(args, "--uninstall")) return StartUninstall(Has(args, "--confirmed"));
             if (args.Length >= 2 && args[0] == "--remove") return Remove(args[1]);
+            if (Has(args, "--update")) return Update(args);
             if (silent) { Install(); return 0; }
 
             ShowInstaller();
@@ -325,6 +326,68 @@ static class Setup
         File.Copy(Application.ExecutablePath, copy);
         Process.Start(new ProcessStartInfo(copy, "--remove " + Process.GetCurrentProcess().Id + (English ? " --lang=en" : " --lang=tr")) { UseShellExecute = false, CreateNoWindow = true });
         return 0;
+    }
+
+    /// <summary>
+    /// Uygulama içi güncelleme: "IskeleSetup.exe --silent --update PID". Iskele'nin (ve bekçisinin) kapanmasını bekler,
+    /// sessizce kurar ve Iskele'yi temiz bir ortamla yeniden açar. Hata olursa kullanıcıya bildirir.
+    /// </summary>
+    static int Update(string[] args)
+    {
+        int pid = 0;
+        for (int i = 0; i < args.Length - 1; i++)
+            if (string.Equals(args[i], "--update", StringComparison.OrdinalIgnoreCase)) int.TryParse(args[i + 1], out pid);
+        if (pid > 0)
+        {
+            try { using (var p = Process.GetProcessById(pid)) p.WaitForExit(30000); }
+            catch (Exception) { }
+        }
+        var until = DateTime.UtcNow.AddSeconds(20);
+        while (Process.GetProcessesByName("Iskele").Length > 0 && DateTime.UtcNow < until) System.Threading.Thread.Sleep(250);
+        int result = 0;
+        // Eski kurulumu yedeğe taşı: kurulum yarıda kalırsa geri konur, çalışan sürüm bozulmaz.
+        string root = Path.GetFullPath(Root).TrimEnd(Path.DirectorySeparatorChar);
+        string backup = root + ".previous";
+        bool moved = false;
+        try
+        {
+            if (Directory.Exists(backup)) Directory.Delete(backup, true);
+            if (Directory.Exists(root) && File.Exists(Path.Combine(root, ".iskele-install"))) { Directory.Move(root, backup); moved = true; }
+        }
+        catch (Exception) { moved = false; }   // taşınamazsa yerinde kurulumla devam edilir
+        try
+        {
+            Install();
+            if (moved) { try { Directory.Delete(backup, true); } catch (Exception) { } }
+        }
+        catch (Exception ex)
+        {
+            result = 1;
+            if (moved)
+            {
+                try { if (Directory.Exists(root)) Directory.Delete(root, true); Directory.Move(backup, root); }
+                catch (Exception) { }
+            }
+            MessageBox.Show(L("Iskele güncellenemedi:\n\n", "Iskele could not be updated:\n\n") + ex.Message +
+                L("\n\nYeni sürümü iskele-dock.github.io adresinden indirip kurabilirsiniz.", "\n\nYou can download the new version from iskele-dock.github.io."),
+                "Iskele", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        try
+        {
+            var psi = new ProcessStartInfo(Path.Combine(Root, "Iskele.exe")) { WorkingDirectory = Root, UseShellExecute = false };
+            var keys = new System.Collections.Generic.List<string>();
+            foreach (string k in psi.EnvironmentVariables.Keys) if (k.StartsWith("ISKELE_", StringComparison.OrdinalIgnoreCase)) keys.Add(k);
+            foreach (var k in keys) psi.EnvironmentVariables.Remove(k);
+            if (!File.Exists(psi.FileName)) throw new FileNotFoundException(psi.FileName);
+            Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            result = 1;
+            MessageBox.Show(L("Iskele yeniden açılamadı. Başlat menüsünden açabilirsiniz.\n\n", "Iskele could not be restarted. You can open it from the Start menu.\n\n") + ex.Message,
+                "Iskele", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        return result;
     }
 
     /// <summary>Iskele'nin kaydettiği görev çubuğu/çalışma alanı durumu duruyorsa "Iskele.exe --restore" ile geri yükler.</summary>

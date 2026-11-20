@@ -85,16 +85,18 @@ No account, server, ads or telemetry. No admin rights needed. Your taskbar **alw
 
 ## Install
 
-1. Download `IskeleSetup-1.0.0.exe` from the [**Releases**](https://github.com/iskele-dock/iskele/releases/latest) page.
+1. Download `IskeleSetup.exe` from [**iskele-dock.github.io**](https://iskele-dock.github.io/?lang=en) or the [**Releases**](https://github.com/iskele-dock/iskele/releases/latest) page.
 2. Run it and click **Install / Update**. The required .NET components are bundled; no admin rights needed.
 3. Switch the interface to English under **Ayarlar → Genel → Arayüz dili** (Settings → General → Interface language). The installer itself lets you pick English too.
 
-Iskele installs only for your user account (`%LocalAppData%\Programs\Iskele`) and adds itself to the Start menu. Silent install: `IskeleSetup-1.0.0.exe --silent`
+Iskele installs only for your user account (`%LocalAppData%\Programs\Iskele`) and adds itself to the Start menu. Silent install: `IskeleSetup.exe --silent`
+
+**Updates:** when a new version is out, Iskele lets you know; right-click the dock and choose **Update**.
 
 > [!NOTE]
 > **Windows SmartScreen:** the installer is not code-signed, so Windows may show an "Unknown publisher" warning. Click **More info → Run anyway**. You can verify the file with the `.sha256` value on the Releases page:
 > ```powershell
-> Get-FileHash .\IskeleSetup-1.0.0.exe -Algorithm SHA256
+> Get-FileHash .\IskeleSetup.exe -Algorithm SHA256
 > ```
 
 ### Uninstall
@@ -167,6 +169,7 @@ Right-click the dock and choose **Edit widgets…** to add, remove and reorder w
 | Calendar | The private iCal address you paste into Settings |
 | GitHub | `gh auth token` on your PC (kept in memory only) |
 | AI limits | Local files (`~/.claude`, `~/.codex`, …); Claude limits are requested only from Anthropic, using your Claude Code sign-in |
+| Update check | GitHub (latest version info only; can be turned off under Settings → General → Updates) |
 
 - Only widgets shown in the dock make network requests.
 - Iskele has no server, account, ads or telemetry. Settings and data stay on your PC (`%AppData%\Iskele`).

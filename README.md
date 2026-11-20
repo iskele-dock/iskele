@@ -85,15 +85,17 @@ Hesap, sunucu, reklam ya da telemetri yok. Yönetici izni gerekmez. Kapatınca g
 
 ## Kurulum
 
-1. [**Releases**](https://github.com/iskele-dock/iskele/releases/latest) sayfasından `IskeleSetup-1.0.0.exe` dosyasını indirin.
+1. [**iskele-dock.github.io**](https://iskele-dock.github.io) adresinden ya da [**Releases**](https://github.com/iskele-dock/iskele/releases/latest) sayfasından `IskeleSetup.exe` dosyasını indirin.
 2. Çalıştırıp **Kur / Güncelle** düğmesine basın. Gerekli .NET bileşenleri pakete dahildir; yönetici izni gerekmez.
 
-Iskele yalnızca sizin kullanıcı hesabınıza (`%LocalAppData%\Programs\Iskele`) kurulur ve Başlat menüsüne eklenir. Sessiz kurulum: `IskeleSetup-1.0.0.exe --silent`
+Iskele yalnızca sizin kullanıcı hesabınıza (`%LocalAppData%\Programs\Iskele`) kurulur ve Başlat menüsüne eklenir. Sessiz kurulum: `IskeleSetup.exe --silent`
+
+**Güncellemeler:** Yeni sürüm çıktığında Iskele haber verir; dock'a sağ tıklayıp **Güncelle**'yi seçmeniz yeterli.
 
 > [!NOTE]
 > **Windows SmartScreen uyarısı:** Kurulum dosyası dijital olarak imzalı olmadığı için "Bilinmeyen yayımcı" uyarısı çıkabilir. **Ek bilgi → Yine de çalıştır** ile devam edin. Dosyanın değişmediğini Releases sayfasındaki `.sha256` değeriyle doğrulayabilirsiniz:
 > ```powershell
-> Get-FileHash .\IskeleSetup-1.0.0.exe -Algorithm SHA256
+> Get-FileHash .\IskeleSetup.exe -Algorithm SHA256
 > ```
 
 ### Kaldırma
@@ -166,6 +168,7 @@ Dock'a sağ tıklayıp **Widget'ları düzenle…** ile widget ekleyip çıkarab
 | Takvim | Ayarlar'a yapıştırdığınız gizli iCal adresi |
 | GitHub | Bilgisayarınızdaki `gh auth token` (yalnızca bellekte tutulur) |
 | AI limitleri | Yerel dosyalar (`~/.claude`, `~/.codex` vb.); Claude limitleri için yalnızca Anthropic'e, Claude Code oturumunuzla sorulur |
+| Güncelleme denetimi | GitHub (yalnızca son sürüm bilgisi; Ayarlar → Genel → Güncellemeler'den kapatılabilir) |
 
 - Yalnızca dock'ta gösterilen widget'lar ağ isteği yapar.
 - Iskele'nin kendi sunucusu, hesabı, reklamı ya da telemetrisi yoktur. Ayarlar ve veriler yalnızca bilgisayarınızda (`%AppData%\Iskele`) tutulur.

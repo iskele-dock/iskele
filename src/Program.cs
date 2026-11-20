@@ -168,6 +168,7 @@ class App : Application
         followTimer.Start();
         DockRecovery.Start();
         Automations.Start();
+        Updater.Start();
         Performance.Start();
 
         // Geliştirici testi: ISKELE_OPEN=settings | picker

@@ -127,6 +127,15 @@ class SettingsWindow : PanelWindow
         p.Children.Add(Row("Windows ile başlat", "Oturum açınca Iskele kendiliğinden açılır",
             Switch(Startup.Enabled, true, i => { try { Startup.Enabled = i == 0; } catch (Exception ex) { App.Log(ex); } })));
 
+        // Güncellemeler: elle denetim / güncelleme bağlantısı + otomatik denetim anahtarı
+        var updateLink = PanelRows.Link(Updater.Available is { } avail ? Localization.F("Güncelle: {0}", avail.Version.ToString(3)) : Localization.T("Şimdi denetle"),
+            () => _ = Updater.Available != null ? Updater.InstallAsync() : Updater.CheckAsync(manual: true));
+        updateLink.Margin = new Thickness(0, 0, 14, 0); updateLink.VerticalAlignment = VerticalAlignment.Center;
+        var updatePanel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        updatePanel.Children.Add(updateLink);
+        updatePanel.Children.Add(Switch(S.CheckUpdates, true, i => { S.CheckUpdates = i == 0; S.Save(); if (S.CheckUpdates) Updater.Start(); else Updater.Stop(); }));
+        p.Children.Add(Row("Güncellemeler", Localization.F("Sürüm {0} · yeni sürümleri GitHub'dan denetler", Updater.Current.ToString(3)), updatePanel));
+
         var dataLink = PanelRows.Link("Klasörü aç", () => App.Open(Settings.Dir));
         p.Children.Add(Row("Veri klasörü", "Ayarlar, notlar ve ekran süresi yalnızca bu bilgisayarda tutulur", dataLink));
 
