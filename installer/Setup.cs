@@ -19,7 +19,7 @@ using Microsoft.Win32;
 
 static class Setup
 {
-    const string Version = "1.0.1";
+    const string Version = "1.0.2";
     const string UninstallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\Iskele";
 
 

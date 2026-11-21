@@ -289,7 +289,7 @@ class DockWindow : Window
 
         timer.Tick += (_, _) => Tick();
         hideTimer.Tick += (_, _) => AutoHideTick();
-        fullscreenTimer.Tick += (_, _) => SetFullscreen(FullscreenOnMyMonitor());
+        fullscreenTimer.Tick += (_, _) => { SetFullscreen(FullscreenOnMyMonitor()); KeepOnTop(); };
         SourceInitialized += OnSourceInitialized;
         Closed += (_, _) => { timer.Stop(); hideTimer.Stop(); hoverOpenTimer.Stop(); fullscreenTimer.Stop(); glassTimer?.Stop(); glass?.Close(); foreach (var s in slots) s.Widget.Detach(); UnregisterBar(); };
 
@@ -785,7 +785,7 @@ class DockWindow : Window
             int code = (int)wParam & 0x7FFF;
             bool high = ((int)wParam & 0x8000) != 0;
             if (code == 6 && high) WindowTracker.Flash(lParam);   // HSHELL_FLASH
-            else if (code == 4) WindowTracker.Unflash(lParam);     // HSHELL_WINDOWACTIVATED / RUDEAPPACTIVATED
+            else if (code == 4) { WindowTracker.Unflash(lParam); Dispatcher.BeginInvoke(KeepOnTop, DispatcherPriority.Background); }   // HSHELL_WINDOWACTIVATED / RUDEAPPACTIVATED
             return IntPtr.Zero;
         }
         if (msg == callbackMsg && callbackMsg != 0)
@@ -841,6 +841,22 @@ class DockWindow : Window
         if (r.Left > b.Left || r.Top > b.Top || r.Right < b.Right || r.Bottom < b.Bottom) return false;
         bool caption = ((long)Native.GetWindowLongPtr(fg, -16 /* GWL_STYLE */) & 0x00C00000) == 0x00C00000;
         return !(IsZoomed(fg) && caption);
+    }
+
+    /// <summary>
+    /// Windows bazen "her zaman üstte" bayrağı duran pencereyi normal pencerelerin altına sıralıyor
+    /// (WS_EX_TOPMOST açık ama Chrome/Obsidian üstünde). Dock'un üstünde görünür, topmost olmayan bir pencere
+    /// varsa dock'u yeniden üst katmanın başına al. Diğer topmost pencerelere (menüler, açılır paneller) dokunmaz.
+    /// </summary>
+    void KeepOnTop()
+    {
+        if (hwnd == IntPtr.Zero || fullscreenHidden || !IsVisible) return;
+        for (var h = Native.GetWindow(hwnd, 3 /* GW_HWNDPREV */); h != IntPtr.Zero; h = Native.GetWindow(h, 3))
+        {
+            if (!Native.IsWindowVisible(h) || ((long)Native.GetWindowLongPtr(h, Native.GWL_EXSTYLE) & 0x08 /* TOPMOST */) != 0) continue;
+            Native.SetWindowPos(hwnd, (IntPtr)(-1) /* HWND_TOPMOST */, 0, 0, 0, 0, 0x0001 | 0x0002 | 0x0010 | 0x0200 /* NOSIZE|NOMOVE|NOACTIVATE|NOOWNERZORDER */);
+            return;
+        }
     }
 
     void SetFullscreen(bool on)

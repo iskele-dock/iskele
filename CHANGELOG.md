@@ -2,6 +2,11 @@
 
 Sürümler [Semantic Versioning](https://semver.org/lang/tr/) düzenini izler.
 
+## [1.0.2] — 2026-11-21
+
+### Düzeltme
+- Dock bazen Chrome gibi normal pencerelerin arkasında kalıyordu: Windows "her zaman üstte" bayrağı açık pencereyi zaman zaman normal pencerelerin altına sıralayabiliyor. Iskele artık her pencere değişiminde (ve yarım saniyede bir) bunu denetleyip kendini yeniden en üste alıyor. Menülere, açılır panellere ve tam ekranda gizlenmeye dokunmaz.
+
 ## [1.0.1] — 2026-11-20
 
 ### Yeni
@@ -34,5 +39,6 @@ Sürümler [Semantic Versioning](https://semver.org/lang/tr/) düzenini izler.
 - Kurulum programı: kullanıcı başına kurulum (yönetici izni yok), Başlat menüsü kısayolu, sessiz kurulum (`--silent`).
 - Kaldırma: Iskele Ayarlar → Genel → **Iskele'yi kaldır** ya da Windows Ayarlar → Uygulamalar; kişisel verilerin silinmesi isteğe bağlı.
 
+[1.0.2]: ../../releases/tag/v1.0.2
 [1.0.1]: ../../releases/tag/v1.0.1
 [1.0.0]: ../../releases/tag/v1.0.0
