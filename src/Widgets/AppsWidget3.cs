@@ -56,6 +56,43 @@ static class Uwp
         return a;
     }
 
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)] static extern int GetApplicationUserModelId(IntPtr process, ref int length, StringBuilder? id);
+    static readonly Dictionary<uint, string> byProcess = [];
+    static readonly Dictionary<string, string> byExe = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Daha önce penceresi görülmüş paketli exe'nin uygulama kimliği (ses paneli vb. için).</summary>
+    public static string AumidForExe(string exe) => byExe.TryGetValue(exe, out var a) ? a : "";
+
+    /// <summary>Paketli masaüstü uygulamaları (WhatsApp, Terminal…) kendi exe'leriyle çalışır; exe'nin gömülü simgesi
+    /// çoğu zaman yer tutucudur. Bunların gerçek logosu paket kimliğinden (AUMID) gelir.</summary>
+    public static bool IsPackagedExe(string exe) => exe.Contains(@"\WindowsApps\", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>Pencere için uygulama kimliği: önce pencere özelliği, olmazsa paketli sürecin kimliği.</summary>
+    public static string AumidOfPackaged(IntPtr hwnd, uint pid)
+    {
+        var a = AumidOf(hwnd);
+        if (a.Length > 0) return a;
+        if (byProcess.TryGetValue(pid, out a)) return a;
+        a = "";
+        var h = Native.OpenProcess(0x1000 /* QUERY_LIMITED_INFORMATION */, false, pid);
+        if (h != IntPtr.Zero)
+            try
+            {
+                int len = 0;
+                if (GetApplicationUserModelId(h, ref len, null) == 122 /* INSUFFICIENT_BUFFER */ && len > 0)
+                {
+                    var sb = new StringBuilder(len);
+                    if (GetApplicationUserModelId(h, ref len, sb) == 0) a = sb.ToString();
+                }
+            }
+            catch { }
+            finally { Native.CloseHandle(h); }
+        if (byProcess.Count > 200) byProcess.Clear();
+        byProcess[pid] = a;
+        if (a.Length > 0 && Native.ProcessPath(pid) is { Length: > 0 } exe) byExe[exe] = a;
+        return a;
+    }
+
     public static string Path(string aumid) => @"shell:AppsFolder\" + aumid;
     public static bool IsPath(string p) => p.StartsWith(@"shell:AppsFolder\", StringComparison.OrdinalIgnoreCase);
     public static string AumidFromPath(string p) => p[@"shell:AppsFolder\".Length..];

@@ -110,6 +110,10 @@ static class IconCache
         img = null;
         try
         {
+            // Store / paketli uygulamalar: exe'nin gömülü simgesi yerine paketin kendi logosu
+            if (Uwp.IsPath(path)) { img = Thumbs.Get(path, 96); cache[path] = img; return img; }
+            if (Uwp.IsPackagedExe(path) && Uwp.AumidForExe(path) is { Length: > 0 } aumid &&
+                Thumbs.Get(Uwp.Path(aumid), 96) is { } logo) { cache[path] = logo; return logo; }
             path = SteamIcons.Resolve(path) ?? path;
             var info = new SHFILEINFO();
             if (Native.SHGetFileInfo(path, 0, ref info, Marshal.SizeOf<SHFILEINFO>(), 0x4000 /* SYSICONINDEX */) != IntPtr.Zero)
@@ -295,7 +299,9 @@ partial class AppsWidget : Widget
         {
             var key = (w.Exe.Length > 0 ? w.Exe : "hwnd:" + w.Hwnd).ToLowerInvariant();
             // Store uygulamaları (ApplicationFrameHost): uygulama kimliğine göre tek simgede topla
-            string aumid = key.EndsWith("applicationframehost.exe") ? Uwp.AumidOf(w.Hwnd) : "";
+            // Paketli masaüstü uygulamaları (WhatsApp vb.) da kimliğe göre topla; simgeleri paketin logosundan gelir.
+            string aumid = key.EndsWith("applicationframehost.exe") ? Uwp.AumidOf(w.Hwnd)
+                         : Uwp.IsPackagedExe(w.Exe) ? Uwp.AumidOfPackaged(w.Hwnd, w.Pid) : "";
             if (aumid.Length > 0) key = "aumid:" + aumid.ToLowerInvariant();
             // Birden çok pencereli UWP uygulamaları (ApplicationFrameHost) pencere başına ayrı göster.
             if (key.EndsWith("applicationframehost.exe")) key += ":" + w.Hwnd;
