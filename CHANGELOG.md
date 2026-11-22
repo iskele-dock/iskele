@@ -2,6 +2,11 @@
 
 Sürümler [Semantic Versioning](https://semver.org/lang/tr/) düzenini izler.
 
+## [1.0.3] — 2026-11-22
+
+### Düzeltme
+- WhatsApp gibi Microsoft Store'dan kurulan uygulamalar dock'ta anlamsız bir pencere simgesiyle görünüyordu (programın içindeki yer tutucu simge). Iskele artık uygulamanın kimliğini bulup Başlat menüsündeki gerçek logosunu gösteriyor; ses panelinde, pencere önizlemesinde ve gruplarda da aynı logo kullanılıyor. Uygulamanın pencereleri sabitlenmiş simgesiyle tek yerde toplanıyor.
+
 ## [1.0.2] — 2026-11-21
 
 ### Düzeltme
